@@ -20,7 +20,11 @@
         Double histryAvgRate = (Double) redisTemplate.opsForValue().get(Constans.HISTRY_AVG_RATE);
         // 如果redis数据为空
         if (!ObjectUtils.allNotNull(histryAvgRate)) {
-            // 加锁限制线程
+            /**
+             * 同步代码块
+             * 一个时间内只能有一个线程得到执行
+             * 另一个线程必须等待当前线程执行完这个代码块以后才能执行该代码块
+             */
             synchronized (this) {
                 histryAvgRate = (Double) redisTemplate.opsForValue().get(Constans.HISTRY_AVG_RATE);
                 // 再次判断
